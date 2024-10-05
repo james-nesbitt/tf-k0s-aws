@@ -1,0 +1,58 @@
+// used to name infrastructure (CHANGE THIS)
+//name = "test"
+
+aws = {
+  region = "us-east-2"
+}
+
+k0sctl = {
+    version = "v1.28.4+k0s.0"
+
+    no_wait = false
+    no_drain = false
+
+    force = false
+
+    disable_downgrade_check = false
+
+    restore_from = ""
+
+    skip_create =  false // if true, then k0s install is skipped
+    skip_destroy = true  // don't bother destroying
+}
+
+
+network = {
+  cidr               = "172.31.0.0/16"
+}
+
+subnets = {
+  "ACon" = { // a subnet for controllers
+    cidr       = "172.31.0.0/17"
+    nodegroups = ["ACon"]
+    private    = false
+  }
+  "AWork" = { // a subnet for all workers
+    cidr       = "172.31.128.0/17"
+    nodegroups = ["AWrk1"]
+    private    = false
+  }
+}
+
+
+nodegroups = {
+  "ACon" = { // Group A controllers
+    role        = "controller"
+    platform    = "ubuntu_22.04"
+    count       = 1
+    type        = "m6a.2xlarge"
+    volume_size = 100
+  },
+  "AWrk1" = { // Group A, 1st workers set
+    role        = "worker"
+    platform    = "ubuntu_22.04"
+    count       = 1
+    type        = "c6a.xlarge"
+    volume_size = 100
+  }
+}
